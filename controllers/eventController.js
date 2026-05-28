@@ -64,8 +64,7 @@ exports.updateEventController = async (req, res) => {
   }
 };
 
-// DELETE EVENT (Fixed & Simplified)
-// deleteEventController
+// DELETE EVENT
 exports.deleteEventController = async (req, res) => {
   try {
     const { id } = req.params;
@@ -74,21 +73,18 @@ exports.deleteEventController = async (req, res) => {
       return res.status(400).json({ message: "Invalid event ID format" });
     }
 
-    const deletedEvent = await events.findByIdAndDelete(id);
+    // ✅ Bypasses Mongoose schema casting — works even with corrupted createdBy field
+    const result = await events.collection.deleteOne({
+      _id: new mongoose.Types.ObjectId(id),
+    });
 
-    if (!deletedEvent) {
-      return res.status(404).json({ message: "Event not found in database" });
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "Event not found" });
     }
 
     res.status(200).json({ message: "Event deleted successfully" });
   } catch (err) {
-    // Log the FULL error, not just message
-    console.log("Delete Error Name:", err.name);
-    console.log("Delete Error Message:", err.message);
-    console.log("Delete Error Stack:", err.stack);
-    res.status(500).json({ 
-      message: "Server error", 
-      error: err.message  // ← temporarily send to frontend so you can see it
-    });
+    console.log("Delete Error:", err.message);
+    res.status(500).json({ message: err.message });
   }
 };
