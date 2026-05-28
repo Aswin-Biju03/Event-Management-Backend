@@ -27,7 +27,6 @@ const adminMiddleware = (req, res, next) => {
     if (userRole === "admin") {
       // ✅ Store id if available, fall back to email
       req.payload = jwtResponse.id || jwtResponse._id || userEmail;
-      console.log("✅ Admin verified. req.payload:", req.payload);
       next();
     } else {
       console.log(`❌ Access Denied: role is "${userRole}"`);
