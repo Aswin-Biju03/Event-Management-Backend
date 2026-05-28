@@ -14,7 +14,6 @@ server.get("/", (req, res) => {
   res.status(200).send(`<h1>Server Started and waiting for Requests</h1>`);
 });
 
-// ✅ Error handler must be LAST and return proper JSON
 server.use((err, req, res, next) => {
   console.log("Global Error Handler:", err.message); // ← now you'll see the real error
   res.status(500).json({ message: err.message });

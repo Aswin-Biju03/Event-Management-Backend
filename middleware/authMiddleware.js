@@ -12,7 +12,7 @@ const authMiddleware = (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWTSECRET);
 
-    req.user = decoded; // attach full user
+    req.user = decoded; 
     next();
 
   } catch (err) {

@@ -15,11 +15,11 @@ const bookingSchema = new mongoose.Schema(
     ticketUuid: {
       type: String,
       required: true,
-      unique: true, // Guarantees no two passes on earth ever match
+      unique: true, 
     },
     attended: {
       type: Boolean,
-      default: false, // Flips to true when scanned
+      default: false, 
     },
   },
   { timestamps: true }

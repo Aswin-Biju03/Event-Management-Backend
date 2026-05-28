@@ -35,7 +35,6 @@ exports.createEventController = async (req, res) => {
       totalTickets,
       category,
       image,
-      // ✅ createdBy removed — req.payload is email string, not ObjectId
     });
     res.status(201).json({ message: "Event created", event });
   } catch (err) {
@@ -51,7 +50,7 @@ exports.updateEventController = async (req, res) => {
     const updated = await events.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true, runValidators: false } // ✅ false prevents CastError on createdBy field
+      { new: true, runValidators: false } 
     );
     res.status(200).json({ message: "Event updated", event: updated });
   } catch (err) {
