@@ -65,20 +65,30 @@ exports.updateEventController = async (req, res) => {
 };
 
 // DELETE EVENT (Fixed & Simplified)
+// deleteEventController
 exports.deleteEventController = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Direct deletion query bypasses extra lookup steps to prevent method crashes
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid event ID format" });
+    }
+
     const deletedEvent = await events.findByIdAndDelete(id);
-    
+
     if (!deletedEvent) {
       return res.status(404).json({ message: "Event not found in database" });
     }
 
     res.status(200).json({ message: "Event deleted successfully" });
   } catch (err) {
-    console.log("Delete Controller Error:", err);
-    res.status(500).json({ message: "Server error running delete loop" });
+    // Log the FULL error, not just message
+    console.log("Delete Error Name:", err.name);
+    console.log("Delete Error Message:", err.message);
+    console.log("Delete Error Stack:", err.stack);
+    res.status(500).json({ 
+      message: "Server error", 
+      error: err.message  // ← temporarily send to frontend so you can see it
+    });
   }
 };
